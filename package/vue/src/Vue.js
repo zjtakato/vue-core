@@ -30,13 +30,17 @@ export class Vue {
     let watch = this.$options.watch;
     if (watch) {
       let keys = Object.keys(watch);
-      new Watcher(this, keys[i], watch[keys[i]]);
+      for (let i = 0; i < keys.length; i++) {
+        new Watcher(this, keys[i], watch[keys[i]]);
+      }
     }
   }
   $watch(key, cb) {
     new Watcher(this, key, cb);
   }
   $set(target, key, value) {
+    // 1. 添加进来的属性进行数据劫持(Object.defineProperty)
+    // 2. 创建添加进来的属性的dep，并收集watcher
     defineReactive(target, key, value);
     target.__ob__.dep.notify();
   }
