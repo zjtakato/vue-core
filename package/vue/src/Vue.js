@@ -6,6 +6,7 @@ export class Vue {
     this.$options = options;
     this._data = options.data();
     this._initData();
+    this._initComputed(); // 在initWatch之前先initComputed，因为wacth可能监听computed里的属性
     this._initWatch();
   }
   _initData() {
@@ -32,6 +33,29 @@ export class Vue {
       let keys = Object.keys(watch);
       for (let i = 0; i < keys.length; i++) {
         new Watcher(this, keys[i], watch[keys[i]]);
+      }
+    }
+  }
+  _initComputed() {
+    let computed = this.$options.computed;
+    if (computed) {
+      let keys = Object.keys(computed);
+      for (let i = 0; i < keys.length; i++) {
+        const watcher = new Watcher(this, computed[keys[i]], () => {}, { lazy: true });
+        Object.defineProperty(this, keys[i], {
+          enumerable: true,
+          configurable: true,
+          get() {
+            if (watcher.dirty === true) {
+              watcher.get();
+              watcher.dirty = false;
+            }
+            return watcher.value;
+          },
+          set() {
+            console.error('不能给computed重新赋值');
+          },
+        });
       }
     }
   }

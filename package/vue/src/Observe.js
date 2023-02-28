@@ -34,13 +34,13 @@ export function defineReactive(target, key, value) {
     configurable: true,
     get() {
       dep.depend();
-      console.log(`~~~~~${key}被访问了~~~~~`)
+      console.log(`~~~~~${key}被访问了~~~~~`);
       if (childOb) childOb.dep.depend();
       return value;
     },
     set(val) {
       dep.notify();
-      console.log(`~~~~~${key}发生了变化~~~~~`)
+      console.log(`~~~~~${key}发生了变化~~~~~`);
       if (val === value) return;
       value = val;
     },

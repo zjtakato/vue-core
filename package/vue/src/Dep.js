@@ -9,7 +9,7 @@ export class Dep {
   }
   notify() {
     this.subs.forEach((watcher) => {
-      watcher.run();
+      watcher.update();
     });
   }
 }

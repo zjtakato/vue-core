@@ -10,8 +10,19 @@ let vm = new Vue({
       },
     };
   },
+  watch: {
+    // info() {
+    //   console.log('xxx');
+    // },
+  },
+  computed: {
+    full(){
+      return this.name + this.age;
+    }
+  }
 });
-vm.name;
-vm.name = 'xxx';
-vm.$set(vm.info, 'xx', 'xx');
-vm.info.xx;
+
+// vm.full;
+// vm.full;
+// vm.name = 'xxx';
+// vm.full;
