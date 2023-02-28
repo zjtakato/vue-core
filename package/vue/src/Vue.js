@@ -1,14 +1,14 @@
 import { Watcher } from './Watcher.js';
-import { observe } from './Observe.js';
+import { observe, defineReactive } from './Observe.js';
 
 export class Vue {
   constructor(options) {
     this.$options = options;
     this._data = options.data();
-    this.initData();
-    this.initWatch();
+    this._initData();
+    this._initWatch();
   }
-  initData() {
+  _initData() {
     let data = this._data;
     let keys = Object.keys(data);
     // 将data代理到this上面
@@ -26,7 +26,7 @@ export class Vue {
     }
     observe(data);
   }
-  initWatch() {
+  _initWatch() {
     let watch = this.$options.watch;
     if (watch) {
       let keys = Object.keys(watch);
@@ -35,5 +35,9 @@ export class Vue {
   }
   $watch(key, cb) {
     new Watcher(this, key, cb);
+  }
+  $set(target, key, value) {
+    defineReactive(target, key, value);
+    target.__ob__.dep.notify();
   }
 }
